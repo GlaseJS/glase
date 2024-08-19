@@ -21,6 +21,5 @@ import { TestModel } from "~/models/test";
   
   console.log(foundDoc);
 
-
   type t = ReturnType<(typeof TestModel)["getDefaults"]>;
 })();

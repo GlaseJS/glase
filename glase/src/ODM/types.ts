@@ -1,44 +1,84 @@
-import { ObjectId } from "bson";
+//
+//
+//
+
+export type Json = boolean | number | string | null | Json[] | { [x: string]: Json };
+
+
+
+//
+//
+//
 
 export const T = {
-  Password: class Password { private __type: "Password" = "Password"; },
-  ObjectId: class ObjectId { private __type: "ObjectId" = "ObjectId"; },
-  String:   class String   { private __type: "String"   = "String"; },
-  Number:   class Number   { private __type: "Number"   = "Number"; },
-  Boolean:  class Boolean  { private __type: "Boolean"  = "Boolean"; },
-  Date:     class Date     { private __type: "Date"     = "Date"; },
-  Json:     class Json     { private __type: "Json"     = "Json"; }
+  ObjectId: class ObjectId { static __type = "ObjectId" as const },
+  Password: class Password { static __type = "Password" as const },
+  Image:    class Image    { static __type = "Image"    as const },
+  JSON:     class Json     { static __type = "JSON"     as const },
+  
+  Boolean:  class Boolean  { static __type = "Boolean"  as const },
+  Number:   class Number   {static  __type = "Number"   as const },
+  String:   class String   { static __type = "String"   as const },
+  Date:     class Date     { static __type = "Date"     as const },
 }
 export type T = typeof T;
 
-type Constructor<T> = new () => T;
-
-export type JsonValue = string | number | boolean | Date | JsonObject | JsonValue[];
-export type JsonObject = {
-  [x in string]: JsonValue;
-}
-export function isJson(value: any): value is JsonObject
-{
-  try
-  {
-    const stringified = JSON.stringify(value);
-    const result      = JSON.parse(stringified);
-
-    if (typeof result === "object") return true;
-    return false;
-  }
-  catch
-  {
-    return false;
-  }
+export type NativeTypeMap = {
+  ObjectId: string,
+  Password: string,
+  Image:    Uint8Array,
+  JSON:     Json,
+  
+  Boolean:  boolean,
+  Number:   number,
+  String:   string,
+  Date:     Date,
 }
 
-export type TypeMap<Type> =
-  Type extends T["Password"] ? string : 
-  Type extends T["ObjectId"] ? ObjectId | string :
-  Type extends T["String"]   ? string :
-  Type extends T["Number"]   ? number :
-  Type extends T["Boolean"]  ? boolean:
-  Type extends T["Date"]     ? Date :
-  Type extends T["Json"]     ? JsonObject :
-  never;
+export type XORMap<S extends { [x in keyof T]: unknown }> = 
+  { type: "ObjectId", value: S["ObjectId"] } |
+  { type: "Password", value: S["Password"] } |
+  { type: "Image",    value: S["Image"] }    |
+  { type: "JSON",     value: S["JSON"] }     |
+
+  { type: "Boolean",  value: S["Boolean"] }  |
+  { type: "Number",   value: S["Number"] }   |
+  { type: "String",   value: S["String"] }   |
+  { type: "Date",     value: S["Date"] }     ;
+
+
+
+//
+//
+//
+
+export type SchemaProperty<Type extends keyof T> = {
+  type: Type,
+  default?: NativeTypeMap[Type],
+  unique?: boolean
+}
+export type SchemaPropertyArray<Type extends keyof T> = {
+  type: `${Type}[]`,
+  default?: NativeTypeMap[Type][]
+}
+
+export type Schema = {
+  [property: string]: 
+    SchemaProperty<"ObjectId"> | SchemaPropertyArray<"ObjectId"> |
+    SchemaProperty<"Password"> | SchemaPropertyArray<"Password"> |
+    SchemaProperty<"Image">    | SchemaPropertyArray<"Image">    |
+    SchemaProperty<"JSON">     | SchemaPropertyArray<"JSON">     |
+
+    SchemaProperty<"Boolean">  | SchemaPropertyArray<"Boolean">  |
+    SchemaProperty<"Number">   | SchemaPropertyArray<"Number">   |
+    SchemaProperty<"String">   | SchemaPropertyArray<"String">   |
+    SchemaProperty<"Date">     | SchemaPropertyArray<"Date">
+}
+  
+
+export type Query<S extends Schema> = {
+  [prop in keyof S]?: 
+    S[prop] extends SchemaProperty<infer X> ?      { equals: NativeTypeMap[X] }   | { oneOf: NativeTypeMap[X][] }         :
+    S[prop] extends SchemaPropertyArray<infer X> ? { contains: NativeTypeMap[X] } | { containsOneOf: NativeTypeMap[X][] } :
+    never
+}

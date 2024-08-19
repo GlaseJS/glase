@@ -1,12 +1,12 @@
 
-import { T, Model } from "glase";
+import { DB } from "../database.server";
 
-export const TestModel = Model("test", {
-  string:     { type: T.String },
-  number:     { type: T.Number },
-  objectid:   { type: T.ObjectId },
-  boolean:    { type: T.Boolean },
-  date:       { type: T.Date },
-  json:       { type: T.Json },
-  password:   { type: T.Password }
+export const TestModel = DB.Model("test", {
+  string:     { type: "String" },
+  number:     { type: "Number" },
+  objectid:   { type: "ObjectId" },
+  boolean:    { type: "Boolean" },
+  date:       { type: "Date" },
+  json:       { type: "JSON" },
+  password:   { type: "Password" }
 });
