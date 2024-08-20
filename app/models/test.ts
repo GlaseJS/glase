@@ -1,7 +1,7 @@
 
-import { DB } from "../database.server";
+import Glase from "../root";
 
-export const TestModel = DB.Model("test", {
+export const TestModel = Glase.Model("test", {
   string:     { type: "String" },
   number:     { type: "Number" },
   objectid:   { type: "ObjectId" },

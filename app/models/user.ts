@@ -1,11 +1,7 @@
 
-import { T, Model } from "glase";
+import Glase from "../root";
 
-const schema = {
-  username: { type: T.String, unique: true },
-  password: { type: T.Password }
-};
-
-export const UserModel = Model("user", schema);
-
-type t = ReturnType<(typeof UserModel)["getDefaults"]>;
+export const UserModel = Glase.Model("user", {
+  username: { type: "String", unique: true },
+  password: { type: "Password" }
+});

@@ -1,4 +1,4 @@
-import { invariant, singleton } from "glase/src/libs";
+import { invariant, singleton } from "glase/libs";
 import { GlaseODMDriver } from "../driver";
 import { Json } from "../types";
 import { BSON, MongoClient } from "mongodb";

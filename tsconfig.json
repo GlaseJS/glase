@@ -1,5 +1,5 @@
 {
-  "include": ["remix.env.d.ts", "**/*.ts", "**/*.tsx"],
+  "include": ["**/*.ts", "**/*.tsx"],
   "compilerOptions": {
     "lib": ["DOM", "DOM.Iterable", "ES2022"],
     "isolatedModules": true,
@@ -14,7 +14,7 @@
     "baseUrl": ".",
     "paths": {
       "~/*": ["./app/*"],
-      "glase/*": ["./glase/*"]
+      "glase/*": ["./glase/src/*"]
     },
 
     // Remix takes care of building everything in `remix build`.
