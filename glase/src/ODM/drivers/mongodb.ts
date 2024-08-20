@@ -1,10 +1,10 @@
 import { invariant, singleton } from "glase/libs";
-import { GlaseODMDriver } from "../driver";
+import { Driver } from "../driver";
 import { Json } from "../types";
 import { BSON, MongoClient } from "mongodb";
 
 
-class MongoDbDriver extends GlaseODMDriver<{
+class MongoDbDriver extends Driver<{
   ObjectId: BSON.ObjectId,
   Password: string,
   Image:    BSON.Binary,

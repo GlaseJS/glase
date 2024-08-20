@@ -1,6 +1,6 @@
 import { T, NativeTypeMap, XORMap } from "./types";
 
-export abstract class GlaseODMDriver<
+export abstract class Driver<
   TypeMap extends { [type in keyof T]: unknown }
 >{
   abstract transformMap:       { [type in keyof T]: (value: NativeTypeMap[type]) => TypeMap[type] }
