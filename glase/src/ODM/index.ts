@@ -1,13 +1,14 @@
-export * as drivers from "./drivers";
+import { GetDrivers } from "glase/libs/types/getdrivers";
 
-import { GlaseODMDriver } from "./driver";
+import * as drivers from "./drivers";
 import { GlaseODMModel } from "./model";
 import { Schema } from "./types";
 
-export const Config = <
-  Driver extends GlaseODMDriver<any> 
->(config: {
-  driver: Driver
+
+const Config = (config: {
+  driver: GetDrivers<typeof drivers>
 }) => ({
   Model: <S extends Schema>(name: string, schema: S) => new GlaseODMModel(config.driver, name, schema),
 });
+
+export { Config, drivers }
